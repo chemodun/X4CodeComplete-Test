@@ -16,6 +16,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onLanguage:xml"
   ],
   "main": "./out/extension.js",
