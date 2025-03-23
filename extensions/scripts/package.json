@@ -1,0 +1,92 @@
+{
+  "name": "x4codecomplete",
+  "displayName": "X4CodeComplete",
+  "description": "",
+  "version": "1.3.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/archenovalis/X4CodeComplete"
+  },
+  "publisher": "CharlieGettys and Archie",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.33.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:xml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "X4 Code Complete Settings",
+      "properties": {
+        "x4CodeComplete.unpackedFileLocation": {
+          "type": "string",
+          "default": "",
+          "description": "Path to unpacked vanilla files."
+        },
+        "x4CodeComplete.extensionsFolder": {
+          "type": "string",
+          "default": "",
+          "description": "Path to your extensions directory."
+        },
+        "x4CodeComplete.languageNumber": {
+          "type": "string",
+          "default": "44",
+          "description": "Preferred language number (e.g., '44' for English). Files matching this number will be displayed first."
+        },
+        "x4CodeComplete.limitLanguageOutput": {
+          "type": "boolean",
+          "default": false,
+          "description": "Limits the language output to show only the preferred language."
+        },
+        "x4CodeComplete.exceedinglyVerbose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Spams the log with info on autocomplete options. Useful for development and debugging, and not much else. May degrade performance significantly."
+        },
+        "x4CodeComplete.reloadLanguageData": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reloads the language data when toggled. Useful for refreshing language files without restarting the extension."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.2",
+    "@types/sax": "^1.2.7",
+    "@types/xml2js": "^0.4.14",
+    "@typescript-eslint/parser": "^8.27.0",
+    "eslint": "^8.52.0",
+    "globals": "^16.0.0",
+    "minimatch": "^10.0.1",
+    "minimist": "^1.2.8",
+    "mkdirp": "^3.0.1",
+    "mocha": "^11.0.1",
+    "prettier": "^3.1.0",
+    "prettier-eslint": "^16.1.2",
+    "tslint": "^5.20.1",
+    "typescript": "^4.4.4",
+    "typescript-eslint": "^8.27.0",
+    "vscode": "^1.1.34"
+  },
+  "dependencies": {
+    "xml2js": "^0.6.2",
+    "xml2js-xpath": "^0.13.0"
+  }
+}
