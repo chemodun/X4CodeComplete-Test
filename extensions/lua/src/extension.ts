@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as https from 'https'; // Import the built-in https module
-import { JSDOM } from 'jsdom'; // Import jsdom
 import TurndownService from 'turndown'; // Import TurndownService
 import sax from 'sax'; // Import sax  (Simple API for XML)
 
@@ -390,8 +389,8 @@ async function fetchLuaFunctionInfoFromWiki(context: vscode.ExtensionContext, fo
 
         // Process the complete response
         res.on('end', () => {
-          const dom = new JSDOM(data);
-          const document = dom.window.document;
+          const parser = new DOMParser();
+          const document = parser.parseFromString(data, 'text/html');
 
           // Locate the table using a CSS selector
           const table = document.querySelector('#xwikicontent > table');
@@ -407,15 +406,10 @@ async function fetchLuaFunctionInfoFromWiki(context: vscode.ExtensionContext, fo
             const cells = row.querySelectorAll('td');
 
             if (cells.length >= 2) {
-              const versionInfo = turndownService.turndown(cells[0].innerHTML).replace(/\*\*/g, '').trim();
+              const versionInfo = cells[0].textContent?.trim() || '';
               const deprecated = versionInfo.toLowerCase().includes('deprecated');
-              const functionInfo = turndownService
-                .turndown(cells[1].innerHTML)
-                .replace(/\*\*/g, '')
-                .replace(/deprecated/gi, '')
-                .trim();
-              const notes =
-                cells.length > 2 ? turndownService.turndown(cells[2].innerHTML).replace(/\*\*/g, '').trim() : '';
+              const functionInfo = cells[1].textContent?.trim() || '';
+              const notes = cells.length > 2 ? cells[2].textContent?.trim() || '' : '';
 
               // Process only the first line of functionInfo
               const firstLine = functionInfo.split('\n')[0].trim();
@@ -535,6 +529,12 @@ export function activate(context: vscode.ExtensionContext) {
                 hoverText.appendMarkdown('```plaintext\n');
                 hoverText.appendMarkdown(languageText);
                 hoverText.appendMarkdown('\n```');
+                const description = luaFunctionInfo.get('ReadText');
+                if (description) {
+                  hoverText.appendMarkdown('\n---\n');
+                  hoverText.appendMarkdown(description);
+                }
+                hoverText.appendMarkdown(description);
                 return new vscode.Hover(hoverText, range);
               }
             }
